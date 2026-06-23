@@ -22,7 +22,9 @@ class TestZhipuChatModel(IsolatedAsyncioTestCase):
 
     def test_init_default_params(self) -> None:
         """Test initialization with default parameters."""
-        with patch("zai.ZhipuAiClient") as mock_client:
+        with patch.dict("sys.modules", {"zai": Mock()}):
+            import sys
+            with patch.object(sys.modules["zai"], "ZhipuAiClient", create=True) as mock_client:
             model = ZhipuChatModel(model_name="glm-4", api_key="test_key")
             self.assertEqual(model.model_name, "glm-4")
             self.assertTrue(model.stream)
@@ -35,7 +37,9 @@ class TestZhipuChatModel(IsolatedAsyncioTestCase):
     def test_init_with_custom_params(self) -> None:
         """Test initialization with custom parameters."""
         generate_kwargs = {"temperature": 0.7, "max_tokens": 1000}
-        with patch("zai.ZhipuAiClient") as mock_client:
+        with patch.dict("sys.modules", {"zai": Mock()}):
+            import sys
+            with patch.object(sys.modules["zai"], "ZhipuAiClient", create=True) as mock_client:
             model = ZhipuChatModel(
                 model_name="glm-4-plus",
                 api_key="test_key",
